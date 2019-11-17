@@ -143,13 +143,6 @@
             </properties>
         </profile>
         <profile>
-            <id>busi</id>
-            <properties>
-                <!--和文件名对应-->
-                <env>busi</env>
-            </properties>
-        </profile>
-        <profile>
             <id>self</id>
             <properties>
                 <!--和文件名对应-->
