@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.LogMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Log">
+    <result column="belong" jdbcType="NVARCHAR" property="belong" />
+    <result column="event" jdbcType="INTEGER" property="event" />
+    <result column="description" jdbcType="NVARCHAR" property="description" />
+    <result column="operator" jdbcType="INTEGER" property="operator" />
+    <result column="operator_name" jdbcType="NVARCHAR" property="operatorName" />
+    <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yx.model.Log">
+    insert into log (belong, event, description, operator, operator_name, stamp)
+    values (#{belong,jdbcType=NVARCHAR}, #{event,jdbcType=INTEGER}, #{description,jdbcType=NVARCHAR}, #{operator,jdbcType=INTEGER}, #{operatorName,jdbcType=NVARCHAR}, #{stamp,jdbcType=TIMESTAMP})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select belong, event, description, operator, operator_name, stamp, id
+    from log
+  </select>
+
+  <sql id="selectTable">
+    SELECT * from log
+    <where>
+      <if test="params!=null and params.event != null">
+        AND event = #{params.event}
+      </if>
+      <if test="params!=null and params.belong.length>0">
+        AND belong = #{params.belong}
+      </if>
+      <if test="params!=null and params.from.length>0">
+        AND stamp &gt;= #{params.belong}
+      </if>
+      <if test="params!=null and params.until.length>0">
+        AND belong &lt;= #{params.belong}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPage" parameterType="com.yx.common.PageProxy" resultMap="BaseResultMap">
+    SELECT
+    TOP ${length} outer_table.*
+    FROM
+    (
+    SELECT
+    row_number () OVER (ORDER BY id) AS rownumber ,inner_table.*
+    FROM
+    (<include refid="selectTable"></include>) AS inner_table
+    ) AS outer_table
+    WHERE
+    rownumber > #{start}
+  </select>
+  <select id="selectTableCount" parameterType="com.yx.common.PageProxy" resultType="int">
+    SELECT count(*) from log
+    <where>
+      <if test="params!=null and params.event != null">
+        AND event = #{params.event}
+      </if>
+      <if test="params!=null and params.belong.length>0">
+        AND belong = #{params.belong}
+      </if>
+      <if test="params!=null and params.from.length>0">
+        AND stamp &gt;= #{params.belong}
+      </if>
+      <if test="params!=null and params.until.length>0">
+        AND belong &lt;= #{params.belong}
+      </if>
+    </where>
+  </select>
+</mapper>

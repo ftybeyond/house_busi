@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.AccessoryMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Accessory">
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="belong" jdbcType="NVARCHAR" property="belong" />
+    <result column="primary_key" jdbcType="INTEGER" property="primaryKey" />
+    <result column="ext" jdbcType="NVARCHAR" property="ext" />
+    <result column="original_name" jdbcType="NVARCHAR" property="originalName" />
+    <result column="remark" jdbcType="NVARCHAR" property="remark" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="content" jdbcType="VARBINARY" property="content" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yx.model.Accessory">
+    insert into accessory (name, belong, primary_key,
+      ext, original_name, remark,  content)
+    values (#{name,jdbcType=NVARCHAR}, #{belong,jdbcType=NVARCHAR}, #{primaryKey,jdbcType=INTEGER},
+      #{ext,jdbcType=NVARCHAR}, #{originalName,jdbcType=NVARCHAR}, #{remark,jdbcType=NVARCHAR},   #{content,jdbcType=VARBINARY})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select name, belong, primary_key, ext, original_name, remark, id
+    from accessory
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from accessory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectByKey" parameterType="java.util.Map" resultMap="BaseResultMap">
+      select name, belong, primary_key, ext, original_name, remark, id
+      from accessory
+      <where>
+        <if test="table !=null and table.length>0">
+          and belong = #{table}
+        </if>
+        <if test="key !=null">
+          and primary_key = #{key}
+        </if>
+      </where>
+  </select>
+  
+  <delete id="deleteByKey" parameterType="java.util.Map">
+    delete from accessory
+    where belong = #{table} and primary_key = #{key}
+  </delete>
+
+  <select id="loadBinary" parameterType="int" resultMap="BaseResultMap">
+    SELECT * FROM accessory
+    where id = #{value}
+  </select>
+</mapper>

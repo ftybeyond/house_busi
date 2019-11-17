@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.OperatorMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Operator">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="region" jdbcType="INTEGER" property="region" />
+    <result column="org" jdbcType="INTEGER" property="org" />
+    <result column="login_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="password" jdbcType="NVARCHAR" property="password" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="role" jdbcType="INTEGER" property="role" />
+    <result column="remark" jdbcType="NVARCHAR" property="remark" />
+  </resultMap>
+  <resultMap id="JoinRowMap" type="com.yx.model.Operator" extends="BaseResultMap">
+    <association property="roleObj" javaType="com.yx.model.Role">
+      <id column="r_id" jdbcType="INTEGER" property="id" />
+      <id column="r_name" jdbcType="NVARCHAR" property="name" />
+      <id column="authority" jdbcType="NVARCHAR" property="authority" />
+      <id column="r_remark" jdbcType="NVARCHAR" property="remark" />
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from operator
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yx.model.Operator" keyProperty="id">
+    insert into operator (name, region,
+      org, login_name, password, role,
+      state, remark)
+    values (#{name,jdbcType=NVARCHAR}, #{region,jdbcType=INTEGER},
+      #{org,jdbcType=INTEGER}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=NVARCHAR}, #{role,jdbcType=INTEGER},
+      #{state,jdbcType=INTEGER}, #{remark,jdbcType=NVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yx.model.Operator">
+    update operator
+    set name = #{name,jdbcType=NVARCHAR},
+      region = #{region,jdbcType=INTEGER},
+      role = #{role,jdbcType=INTEGER},
+      org = #{org,jdbcType=INTEGER},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updatePassword" parameterType="com.yx.model.Operator">
+    update operator
+    set password = #{password}
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select *
+    from operator
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select *
+    from operator
+  </select>
+
+  <select id="selectByLoginName" parameterType="java.lang.String" resultMap="JoinRowMap">
+    SELECT o.* ,r.id AS r_id,r.name AS r_name,r.authority, r.remark AS  r_remark from operator o
+    LEFT JOIN role r ON r.id = o.role
+    where login_name = #{value}
+  </select>
+</mapper>

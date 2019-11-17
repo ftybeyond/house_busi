@@ -1,239 +1,190 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%
-	String path = request.getContextPath();
-%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>宁夏回族自治区政府机关事务管理局房产信息智能管理平台</title>
-	<!-- Tell the browser to be responsive to screen width -->
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<!-- Bootstrap 3.3.7 -->
-	<link rel="stylesheet" href="<%=path%>bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="<%=path%>bower_components/font-awesome/css/font-awesome.min.css">
-	<!-- Ionicons -->
-	<link rel="stylesheet" href="<%=path%>bower_components/Ionicons/css/ionicons.min.css">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="<%=path%>dist/css/AdminLTE.min.css">
-	<!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
-	<link rel="stylesheet" href="<%=path%>dist/css/skins/skin-red-light.min.css">
-
-	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-	<!--[if lt IE 9]>
-	<script src="<%=path%>dist/js/html5/html5shiv.min.js"></script>
-	<script src="<%=path%>dist/js/html5/respond.min.js"></script>
-	<![endif]-->
-	<!-- Google Font -->
-	<link rel="stylesheet"
-		  href="dist/css/google_font.css">
-</head>
+<%@include file="template/header.jsp"%>
 <body class="hold-transition skin-red-light sidebar-mini">
 <div class="wrapper">
 
-	<header class="main-header">
-		<!-- Logo -->
-		<a href="javascript:void(0)" class="logo">
-			<!-- mini logo for sidebar mini 50x50 pixels -->
-			<span class="logo-mini"><b>菜单</b></span>
-			<!-- logo for regular state and mobile devices -->
-			<span class="logo-lg"><b>房产信息管理平台</b></span>
-		</a>
-		<!-- Header Navbar: style can be found in header.less -->
-		<nav class="navbar navbar-static-top">
-			<!-- Sidebar toggle button-->
-			<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</a>
+	<%@include file="template/main_header.jsp"%>
 
-			<div class="navbar-custom-menu">
-				<ul class="nav navbar-nav">
-					<!-- User Account: style can be found in dropdown.less -->
-					<li class="dropdown user user-menu">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<img src="<%=path%>dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-							<span class="hidden-xs">超级管理员</span>
-						</a>
-						<ul class="dropdown-menu">
-							<!-- User image -->
-							<li class="user-header">
-								<img src="<%=path%>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-								<p>
-									超级管理员-雨询
-									<small>Member since Nov. 2012</small>
-								</p>
-							</li>
-							<!-- Menu Footer-->
-							<li class="user-footer">
-								<div class="pull-left">
-									<a href="#" class="btn btn-default btn-flat">密码修改</a>
-								</div>
-								<div class="pull-right">
-									<a href="#" class="btn btn-default btn-flat">登出</a>
-								</div>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</nav>
-	</header>
-	<!-- Left side column. contains the logo and sidebar -->
-	<aside class="main-sidebar">
-		<!-- sidebar: style can be found in sidebar.less -->
-		<section class="sidebar">
-			<!-- Sidebar user panel -->
-			<div class="user-panel">
-				<div class="pull-left image">
-					<img src="<%=path%>dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-				</div>
-				<div class="pull-left info">
-					<p>超级管理员</p>
-					<a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
-				</div>
-			</div>
-			<!-- sidebar menu: : style can be found in sidebar.less -->
-			<ul class="sidebar-menu" data-widget="tree">
-				<li class="header">功能菜单</li>
-				<li class="treeview">
-					<a href="#">
-						<i class="fa fa-dashboard"></i> <span>经营性房产</span>
-						<span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-						<li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-					</ul>
-				</li>
-
-				<li class="treeview">
-					<a href="#">
-						<i class="fa fa-share"></i> <span>Multilevel</span>
-						<span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-					</a>
-					<ul class="treeview-menu">
-						<li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-						<li class="treeview">
-							<a href="#"><i class="fa fa-circle-o"></i> Level One
-								<span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-							</a>
-							<ul class="treeview-menu">
-								<li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
-								<li class="treeview">
-									<a href="#"><i class="fa fa-circle-o"></i> Level Two
-										<span class="pull-right-container">
-                      <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-									</a>
-									<ul class="treeview-menu">
-										<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-										<li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-						<li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-					</ul>
-				</li>
-				<li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
-				<li class="header">LABELS</li>
-				<li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
-				<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
-				<li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-			</ul>
-		</section>
-		<!-- /.sidebar -->
-	</aside>
-
+	<%@include file="template/main-sidebar.jsp"%>
 	<!-- Content Wrapper. Contains page content -->
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
-			<h1>
-				Modals
-				<small>new</small>
-			</h1>
+			<h3>
+				首页
+			</h3>
 			<ol class="breadcrumb">
-				<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-				<li><a href="#">UI</a></li>
-				<li class="active">Modals</li>
+				<li><a href="#"><i class="fa fa-dashboard"></i> ${applicationScope.sysHeaderTitle}</a></li>
+				<li class="active">首页</li>
 			</ol>
 		</section>
 
 		<!-- Main content -->
 		<section class="content">
 			<div class="row">
-				<div class="col-xs-12">
-					<div class="box box-default">
+				<div class="col-md-6">
+					<!-- Default box -->
+					<div class="box box-danger">
 						<div class="box-header with-border">
-							<h3 class="box-title">Modal Examples</h3>
+							<h3 class="box-title">自治区本级行政事业单位国有资产进场出租流程图</h3>
+
+							<div class="box-tools pull-right">
+								<button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+										title="Collapse">
+									<i class="fa fa-minus"></i></button>
+							</div>
+						</div>
+						<div class="box-body" align="center">
+							<img src="<%=basePath%>dist/img/flow.png" style="overflow: hidden"/>
+						</div>
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
+				</div>
+
+				<div class="col-md-6">
+					<!-- Default box -->
+					<div class="box box-danger">
+						<div class="box-header with-border">
+							<h3 class="box-title">重要通知</h3>
+
+							<div class="box-tools pull-right">
+								<a href="#">全部</a>
+								<button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+										title="Collapse">
+									<i class="fa fa-minus"></i></button>
+							</div>
 						</div>
 						<div class="box-body">
-							<button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
-								Launch Default Modal
-							</button>
+							<table class="table table-hover">
+								<tr>
+									<th>标题</th>
+									<th>发起单位</th>
+									<th>发表日期</th>
+									<th>类型</th>
+								</tr>
+								<tr>
+									<td>经营性资产通知</td>
+									<td>机管局</td>
+									<td>2019-01-01</td>
+									<td>政策法规</td>
+								</tr>
+								<tr>
+									<td>经营性用房管理规范</td>
+									<td>机管局</td>
+									<td>2018-12-11</td>
+									<td>管理规范</td>
+								</tr>
+							</table>
 						</div>
+						<!-- /.box-body -->
+					</div>
+					<div class="box box-danger">
+						<div class="box-header with-border">
+							<h3 class="box-title">租期临近</h3>
+
+							<div class="box-tools pull-right">
+								<a href="#">更多</a>
+								<button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+										title="Collapse">
+									<i class="fa fa-minus"></i></button>
+							</div>
+						</div>
+						<div class="box-body">
+							<table class="table table-hover">
+								<tr>
+									<th>单位地址</th>
+									<th>承租人</th>
+									<th>租约到期</th>
+									<th>状态</th>
+								</tr>
+								<tr>
+									<td>解放西街201号</td>
+									<td>John Doe</td>
+									<td>2019-05-21</td>
+									<td><span class="label label-primary">30天</span></td>
+								</tr>
+								<tr>
+									<td>怀远西路100号</td>
+									<td>Alexander Pierce</td>
+									<td>2019-05-11</td>
+									<td><span class="label label-warning">20天</span></td>
+								</tr>
+								<tr>
+									<td>政府大院4号楼105室</td>
+									<td>Bob Doe</td>
+									<td>2019-04-09</td>
+									<td><span class="label label-warning">10天</span></td>
+								</tr>
+								<tr>
+									<td>凤凰北街1号</td>
+									<td>Mike Doe</td>
+									<td>2019-04-15</td>
+									<td><span class="label label-danger">超期5天</span></td>
+								</tr>
+							</table>
+						</div>
+						<!-- /.box-body -->
+					</div>
+					<div class="box box-danger">
+						<div class="box-header with-border">
+							<h3 class="box-title">流程文档</h3>
+
+							<div class="box-tools pull-right">
+								<button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+										title="Collapse">
+									<i class="fa fa-minus"></i></button>
+							</div>
+						</div>
+						<div class="box-body">
+							<table class="table table-hover">
+								<tr>
+									<th>序号</th>
+									<th>文档名称</th>
+									<th>说明</th>
+								</tr>
+								<tr>
+									<td>0</td>
+									<td>出租方需提供资料清单</td>
+									<td><a href="#">下载</a></td>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>租赁项目申请书（一式两份）</td>
+									<td><a href="#">下载</a></td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>行政单位国有资产租赁委托书（一式两份）</td>
+									<td><a href="#">下载</a></td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>行政单位资产租赁挂牌价格核准备案表</td>
+									<td><a href="#">下载</a></td>
+								</tr>
+								<tr>
+									<td>4</td>
+									<td>授权委托书</td>
+									<td><a href="#">下载</a></td>
+								</tr>
+							</table>
+						</div>
+						<!-- /.box-body -->
 					</div>
 				</div>
-			</div>
 
-			<div class="modal fade" id="modal-default">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title">Default Modal</h4>
-						</div>
-						<div class="modal-body">
-							<p>操作成功</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" data-dismiss="modal" data-keyboard="false">确定</button>
-						</div>
-					</div>
-					<!-- /.modal-content -->
-				</div>
-				<!-- /.modal-dialog -->
 			</div>
-			<!-- /.modal -->
-
 		</section>
 		<!-- /.content -->
+
 	</div>
 	<!-- /.content-wrapper -->
-
-	<footer class="main-footer">
-		<div class="pull-right hidden-xs">
-			<b>Version</b> 1.0.0
-		</div>
-		<strong>Copyright &copy; 2019-2022 <a href="#">宁夏回族自治区机关事务管理局</a>.</strong> All rights
-		reserved.
-	</footer>
-
+	<%@include file="template/main-footer.jsp"%>
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery 3 -->
-<script src="<%=path%>bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="<%=path%>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- FastClick -->
-<script src="<%=path%>bower_components/fastclick/lib/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="<%=path%>dist/js/adminlte.min.js"></script>
+</body>
+<%@include file="template/footer_script.jsp"%>
 </html>
 

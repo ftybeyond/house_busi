@@ -19,19 +19,19 @@
         <property name = "suffix" value = ".jsp"></property>
     </bean>
 
-    <!--<mvc:interceptors>-->
-        <!--&lt;!&ndash;  使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求   &ndash;&gt;-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/rest/**"/>-->
-            <!--<bean class="com.qth.inspector.AjaxInterceptor"></bean>-->
-        <!--</mvc:interceptor>-->
-        <!--<mvc:interceptor>-->
-            <!--<mvc:mapping path="/page/*"/>-->
-            <!--<mvc:exclude-mapping path="/page/index.action"></mvc:exclude-mapping>-->
-            <!--<bean class="com.qth.inspector.LoginInterceptor"></bean>-->
-        <!--</mvc:interceptor>-->
+    <mvc:interceptors>
+        <!--  使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求   -->
+        <mvc:interceptor>
+            <mvc:mapping path="/rest/**"/>
+            <bean class="com.yx.interceptor.AjaxInterceptor"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/page/*"/>
+            <mvc:exclude-mapping path="/page/login.html"></mvc:exclude-mapping>
+            <bean class="com.yx.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
 
-    <!--</mvc:interceptors>-->
+    </mvc:interceptors>
 
     <mvc:annotation-driven>
 	     <mvc:message-converters>

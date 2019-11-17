@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.SummaryMapper">
+  <resultMap id="SummaryMap" type="com.yx.model.common.CommonChartModel">
+    <result property="name" jdbcType="NVARCHAR" column="col"></result>
+    <result property="value" jdbcType="NVARCHAR" column="val"></result>
+  </resultMap>
+
+  <select id="houseUsedSummary" resultMap="SummaryMap">
+      SELECT
+          convert(NVARCHAR,COUNT (h.id)) AS val,
+          convert(NVARCHAR,am.state) as col
+      FROM
+          house h
+      LEFT JOIN agreement am ON h.agreement = am.id
+      GROUP BY
+          am.state
+  </select>
+
+  <select id="yearChargeSummary" resultType="com.yx.model.ChargeSummary" parameterType="map">
+    SELECT
+    SUM (b.payable) AS payable,
+    SUM (b.payment) AS payment
+    FROM
+    bill b
+    LEFT JOIN agreement am ON b.agreement = am.id
+    WHERE
+    am.state &gt; 1
+    AND b.account_period &gt;= #{from}
+    AND b.account_period &lt;= #{until}
+  </select>
+  
+  <select id="yearChargeSummaryRound" resultType="com.yx.model.ChargeSummary" parameterType="map">
+    SELECT
+    year(b.account_period) as year,
+    SUM (b.payable) AS payable,
+    SUM (b.payment) AS payment
+    FROM
+    bill b
+    LEFT JOIN agreement am ON b.agreement = am.id
+    WHERE
+    am.state &gt; 1
+    AND b.account_period &gt;= #{from}
+    AND b.account_period &lt;= #{until}
+    GROUP BY year(b.account_period)
+  </select>
+
+  <select id="monthChargeSummary" resultType="com.yx.model.ChargeSummary" parameterType="map">
+    SELECT
+      SUM (b.payable) AS payable,
+      MONTH (b.account_period) AS MONTH
+    FROM
+    bill b
+    LEFT JOIN agreement am ON b.agreement = am.id
+    WHERE
+    am.state &gt; 1
+    AND b.account_period &gt;= #{from}
+    AND b.account_period &lt;= #{until}
+    GROUP BY MONTH (b.account_period)
+  </select>
+  
+  <select id="housesCount" resultType="int">
+    SELECT count(*) from house
+  </select>
+
+  <select id="idleHousesCount" resultType="int">
+    SELECT count(*) from house h
+    WHERE h.agreement is null
+  </select>
+
+  <select id="housesAreaCount" resultType="double">
+    SELECT sum(h.area) from house h
+  </select>
+</mapper>

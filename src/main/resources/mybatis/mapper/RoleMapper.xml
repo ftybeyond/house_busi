@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Role">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="authority" jdbcType="NVARCHAR" property="authority" />
+    <result column="remark" jdbcType="NVARCHAR" property="remark" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yx.model.Role">
+    insert into role ( name, authority,
+      remark)
+    values (#{name,jdbcType=NVARCHAR}, #{authority,jdbcType=NVARCHAR},
+      #{remark,jdbcType=NVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yx.model.Role">
+    update role
+    set name = #{name,jdbcType=NVARCHAR},
+      authority = #{authority,jdbcType=NVARCHAR},
+      remark = #{remark,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, authority, remark
+    from role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, authority, remark
+    from role
+  </select>
+</mapper>

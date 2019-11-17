@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.BaseMapper">
+  <resultMap id="Select2Map" type="com.yx.model.common.Select2">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="text" />
+  </resultMap>
+  <select id="getSelect2Data" resultMap="Select2Map" parameterType="java.lang.String">
+    select id, name
+    from ${value}
+  </select>
+  <!--通用更新数据库表-->
+  <update id="updateByMap" parameterType="com.yx.model.common.UpdateMap">
+    UPDATE ${tableName}  SET
+    <foreach collection="props" item="item" index="key" separator=",">
+      ${key} = #{props.${key}}
+    </foreach>
+    <where>
+      id = #{id}
+    </where>
+  </update>
+</mapper>

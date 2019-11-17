@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.HouseMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.House" autoMapping="true">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="house_number" jdbcType="NVARCHAR" property="houseNumber" />
+    <result column="nature" jdbcType="INTEGER" property="nature" />
+    <result column="area" jdbcType="DOUBLE" property="area" />
+    <result column="house_type" jdbcType="INTEGER" property="houseType" />
+    <result column="agreement" jdbcType="INTEGER" property="agreement" />
+    <result column="decorate" jdbcType="INTEGER" property="decorate" />
+    <result column="region" jdbcType="INTEGER" property="region" />
+    <result column="layout" jdbcType="NVARCHAR" property="layout" />
+    <result column="remark" jdbcType="NVARCHAR" property="remark" />
+    <result column="certificate" jdbcType="NVARCHAR" property="certificate" />
+    <result column="owner" jdbcType="NVARCHAR" property="owner" />
+    <result column="house_code" jdbcType="NVARCHAR" property="houseCode" />
+  </resultMap>
+  <resultMap id="JoinAgreementMap" type="com.yx.model.House" extends="BaseResultMap" autoMapping="true">
+    <association property="agreementObj" javaType="com.yx.model.Agreement" >
+      <id column="a_id" jdbcType="INTEGER" property="id" />
+      <result column="title" jdbcType="NVARCHAR" property="title" />
+      <result column="rent" jdbcType="DOUBLE" property="rent" />
+      <result column="sign_date" jdbcType="TIMESTAMP" property="signDate" />
+      <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate" />
+      <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+      <result column="contacts1" jdbcType="NVARCHAR" property="contacts1" />
+      <result column="contacts2" jdbcType="NVARCHAR" property="contacts2" />
+      <result column="contacts1_tel" jdbcType="NVARCHAR" property="contacts1Tel" />
+      <result column="contacts2_tel" jdbcType="NVARCHAR" property="contacts2Tel" />
+      <result column="pay_round" jdbcType="INTEGER" property="payRound" />
+      <result column="serial_number" jdbcType="NVARCHAR" property="serialNumber" />
+      <result column="state" jdbcType="INTEGER" property="state" />
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from house
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yx.model.House">
+    insert into house (house_number, nature,
+      area, house_type, agreement,
+      decorate, region, layout,
+      remark, certificate, owner,
+      house_code)
+    values (#{houseNumber,jdbcType=NVARCHAR}, #{nature,jdbcType=INTEGER},
+      #{area,jdbcType=DOUBLE}, #{houseType,jdbcType=INTEGER}, #{agreement,jdbcType=INTEGER},
+      #{decorate,jdbcType=INTEGER}, #{region,jdbcType=INTEGER}, #{layout,jdbcType=NVARCHAR},
+      #{remark,jdbcType=NVARCHAR}, #{certificate,jdbcType=NVARCHAR}, #{owner,jdbcType=NVARCHAR},
+      #{houseCode,jdbcType=NVARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yx.model.House">
+    update house
+    set house_number = #{houseNumber,jdbcType=NVARCHAR},
+      nature = #{nature,jdbcType=INTEGER},
+      area = #{area,jdbcType=DOUBLE},
+      house_type = #{houseType,jdbcType=INTEGER},
+      agreement = #{agreement,jdbcType=INTEGER},
+      decorate = #{decorate,jdbcType=INTEGER},
+      region = #{region,jdbcType=INTEGER},
+      layout = #{layout,jdbcType=NVARCHAR},
+      remark = #{remark,jdbcType=NVARCHAR},
+      certificate = #{certificate,jdbcType=NVARCHAR},
+      owner = #{owner,jdbcType=NVARCHAR},
+      house_code = #{houseCode,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, house_number, nature, area, house_type, agreement, decorate, region, layout,
+    remark, certificate, owner, house_code
+    from house
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, house_number, nature, area, house_type, agreement, decorate, region, layout,
+    remark, certificate, owner, house_code
+    from house
+  </select>
+
+  <sql id="selectTable">
+    select h.*,r.name_path as regionPath from house h LEFT JOIN region r on h.region = r.id
+    <where>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params != null and params.am>0">
+        and h.agreement = #{am}
+      </if>
+      <if test="params != null and params.am == -1">
+        and h.agreement is null
+      </if>
+      <if test="params != null and params.houseCodeSearch != null and params.houseCodeSearch.length>0">
+        and h.house_code = #{params.houseCodeSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch !=null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_number LIKE #{houseNumberSearch}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectCountByPage" parameterType="com.yx.common.PageProxy" resultType="int">
+    select count(*) from house h LEFT JOIN region r on h.region = r.id
+    <where>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params != null and params.am>0">
+        and h.agreement = #{am}
+      </if>
+      <if test="params != null and params.am == -1">
+        and h.agreement is null
+      </if>
+      <if test="params != null and params.houseCodeSearch != null and params.houseCodeSearch.length>0">
+        and h.house_code = #{params.houseCodeSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch !=null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_number LIKE #{houseNumberSearch}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPage" parameterType="com.yx.common.PageProxy" resultMap="BaseResultMap">
+    SELECT
+        TOP ${length} outer_table.*
+    FROM
+        (
+            SELECT
+                row_number () OVER (ORDER BY id) AS rownumber ,inner_table.*
+            FROM
+                (<include refid="selectTable"></include>) AS inner_table
+        ) AS outer_table
+    WHERE
+        rownumber > #{start}
+  </select>
+
+  <select id="selectWithAgreementByPage" parameterType="com.yx.common.PageProxy" resultMap="JoinAgreementMap">
+    SELECT
+    TOP ${length} outer_table.*
+    FROM
+    (
+    SELECT
+    row_number () OVER (ORDER BY id) AS rownumber ,inner_table.*
+    FROM
+    (<include refid="selectWithAgreement"></include>) AS inner_table
+    ) AS outer_table
+    WHERE
+    rownumber > #{start}
+  </select>
+
+  <sql id="selectWithAgreement">
+    SELECT
+        h.*,am.id as a_id, am.title, am.rent, am.sign_date, am.effect_date, am.end_date, am.contacts1, am.contacts2,
+    am.contacts1_tel, am.contacts2_tel, am.pay_round, am.serial_number, am.state
+    FROM
+        house h
+    INNER JOIN agreement am ON h.agreement = am.id
+    LEFT JOIN region r ON h.region = r.id
+    <where>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params != null and params.houseCodeSearch != null and params.houseCodeSearch.length>0">
+        and h.house_code = #{params.houseCodeSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch != null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_code LIKE #{houseNumberSearch}
+      </if>
+      <if test="params != null and params.serialNumberSearch != null and params.serialNumberSearch.length>0">
+        <bind name="serialNumberSearch" value="'%'+params.serialNumberSearch+'%'"></bind>
+        and am.serial_number = #{params.serialNumberSearch}
+      </if>
+      <if test="params != null and params.agreementSearch != null">
+        and house.agreement = #{params.agreementSearch}
+      </if>
+    </where>
+  </sql>
+  <select id="selectCountWithAgreement" parameterType="com.yx.common.PageProxy" resultType="int">
+    SELECT
+    count(*)
+    FROM
+    house h
+    INNER JOIN agreement am ON h.agreement = am.id
+    LEFT JOIN region r ON h.region = r.id
+    <where>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params != null and params.houseCodeSearch != null and params.houseCodeSearch.length>0">
+        and h.house_code = #{params.houseCodeSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch != null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_code LIKE #{houseNumberSearch}
+      </if>
+      <if test="params != null and params.serialNumberSearch != null and params.serialNumberSearch.length>0">
+        <bind name="serialNumberSearch" value="'%'+params.serialNumberSearch+'%'"></bind>
+        and am.serial_number = #{params.serialNumberSearch}
+      </if>
+      <if test="params != null and params.agreementSearch != null">
+        and house.agreement = #{params.agreementSearch}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByAgreement" parameterType="int" resultMap="BaseResultMap">
+    select h.*,r.name_path AS regionPath from house h LEFT JOIN region r ON h.region = r.id
+    where agreement = #{value}
+  </select>
+
+  <update id="relieveAgreement" parameterType="int">
+    update house set agreement = null
+    where agreement = #{value}
+  </update>
+</mapper>

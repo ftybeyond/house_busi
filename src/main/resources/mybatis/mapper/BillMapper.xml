@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.BillMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Bill">
+    <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="agreement" jdbcType="INTEGER" property="agreement" />
+    <result column="payable" jdbcType="DOUBLE" property="payable" />
+    <result column="payment" jdbcType="DOUBLE" property="payment" />
+    <result column="remark" jdbcType="NVARCHAR" property="remark" />
+    <result column="invoice" jdbcType="NVARCHAR" property="invoice" />
+    <result column="account_period" jdbcType="TIMESTAMP" property="accountPeriod" />
+    <result column="charge_date" jdbcType="TIMESTAMP" property="chargeDate" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <resultMap id="JoinMap" type="com.yx.model.Bill" extends="BaseResultMap">
+    <association property="agreementObj" javaType="com.yx.model.Agreement" >
+      <id column="a_id" jdbcType="INTEGER" property="id" />
+      <result column="title" jdbcType="NVARCHAR" property="title" />
+      <result column="rent" jdbcType="DOUBLE" property="rent" />
+      <result column="sign_date" jdbcType="TIMESTAMP" property="signDate" />
+      <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate" />
+      <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+      <result column="contacts1" jdbcType="NVARCHAR" property="contacts1" />
+      <result column="contacts2" jdbcType="NVARCHAR" property="contacts2" />
+      <result column="contacts1_tel" jdbcType="NVARCHAR" property="contacts1Tel" />
+      <result column="contacts2_tel" jdbcType="NVARCHAR" property="contacts2Tel" />
+      <result column="pay_round" jdbcType="INTEGER" property="payRound" />
+      <result column="serial_number" jdbcType="NVARCHAR" property="serialNumber" />
+      <result column="a_state" jdbcType="INTEGER" property="state" />
+    </association>
+    <association property="houseObj" javaType="com.yx.model.House" >
+      <id column="h_id" jdbcType="INTEGER" property="id" />
+      <result column="house_number" jdbcType="NVARCHAR" property="houseNumber" />
+      <result column="nature" jdbcType="INTEGER" property="nature" />
+      <result column="area" jdbcType="DOUBLE" property="area" />
+      <result column="house_type" jdbcType="INTEGER" property="houseType" />
+      <result column="agreement" jdbcType="INTEGER" property="agreement" />
+      <result column="decorate" jdbcType="INTEGER" property="decorate" />
+      <result column="region" jdbcType="INTEGER" property="region" />
+      <result column="layout" jdbcType="NVARCHAR" property="layout" />
+      <result column="remark" jdbcType="NVARCHAR" property="remark" />
+      <result column="certificate" jdbcType="NVARCHAR" property="certificate" />
+      <result column="owner" jdbcType="NVARCHAR" property="owner" />
+      <result column="house_code" jdbcType="NVARCHAR" property="houseCode" />
+    </association>
+  </resultMap>
+  <insert id="insert" parameterType="com.yx.model.Bill">
+    insert into bill (stamp, agreement, payable,
+      payment, remark,invoice, account_period,state)
+    values (#{stamp,jdbcType=TIMESTAMP}, #{agreement,jdbcType=INTEGER}, #{payable,jdbcType=DOUBLE}, 
+      #{payment,jdbcType=DOUBLE}, #{remark,jdbcType=NVARCHAR},#{invoice,jdbcType=NVARCHAR}, #{accountPeriod,jdbcType=TIMESTAMP},#{state,jdbcType=INTEGER})
+  </insert>
+  
+  <select id="selectPayable" parameterType="int" resultMap="BaseResultMap">
+    SELECT * from bill
+    WHERE agreement = #{value} and state = 0
+  </select>
+  
+  <delete id="overDelete" parameterType="int">
+    DELETE from bill
+    WHERE agreement = #{value} and state = 0
+  </delete>
+  
+  <select id="selectListJoinByPage" parameterType="com.yx.common.PageProxy" resultMap="JoinMap">
+    SELECT
+    TOP ${length} outer_table.*
+    FROM
+    (
+    SELECT
+    row_number () OVER (ORDER BY id) AS rownumber ,inner_table.*
+    FROM
+    (<include refid="selectListJoin"></include>) AS inner_table
+    ) AS outer_table
+    WHERE
+    rownumber > #{start}
+  </select>
+
+  <select id="selectCountJoinByPage" parameterType="com.yx.common.PageProxy" resultType="int">
+    SELECT
+        count(*)
+    FROM
+        bill b
+    LEFT JOIN agreement am ON b.agreement = am.id
+    LEFT JOIN house h ON h.agreement = b.agreement
+    LEFT JOIN region r ON h.region = r.id
+    <where>
+      <if test="params != null and params.state != null">
+        and b.state = #{params.state}
+      </if>
+      <if test="params != null and params.fromDate != null">
+        and b.account_period  &lt;= #{params.fromDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params!=null and params.serialNumberSearch.length>0">
+        AND am.serial_number =  #{params.serialNumberSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch != null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_number LIKE #{houseNumberSearch}
+      </if>
+    </where>
+  </select>
+
+  <sql id="selectListJoin">
+      SELECT
+        b.*, am.id AS a_id,
+        am.title,
+        am.rent,
+        am.sign_date,
+        am.effect_date,
+        am.end_date,
+        am.contacts1,
+        am.contacts2,
+        am.contacts1_tel,
+        am.contacts2_tel,
+        am.pay_round,
+        am.serial_number,
+        am.state AS a_state,
+        h.id AS h_id,
+        h.house_number,
+        h.nature,
+        h.area,
+        h.house_type,
+        h.decorate,
+        h.region,
+        h.layout,
+        h.certificate,
+        h.owner,
+        h.house_code
+    FROM
+        bill b
+    LEFT JOIN agreement am ON b.agreement = am.id
+    LEFT JOIN house h ON h.agreement = b.agreement
+    LEFT JOIN region r ON h.region = r.id
+    <where>
+      <if test="params != null and params.state != null">
+        and b.state = #{params.state}
+      </if>
+      <if test="params != null and params.fromDate != null">
+        and b.account_period &lt;= #{params.fromDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="params != null and params.idPath != null and params.idPath.length>0">
+        <bind name="idPath" value="params.idPath+'.%'"></bind>
+        and (r.id_path LIKE #{idPath} or r.id_path = #{params.idPath})
+      </if>
+      <if test="params!=null and params.serialNumberSearch.length>0">
+        AND am.serial_number =  #{params.serialNumberSearch}
+      </if>
+      <if test="params != null and params.houseNumberSearch != null and params.houseNumberSearch.length>0">
+        <bind name="houseNumberSearch" value="'%'+params.houseNumberSearch+'%'"></bind>
+        and h.house_number LIKE #{houseNumberSearch}
+      </if>
+    </where>
+  </sql>
+  
+    <update id="doCharge" parameterType="com.yx.model.Bill">
+      UPDATE bill SET
+      state = #{state},
+      invoice = #{invoice},
+      payment = #{payment},
+      charge_date = #{chargeDate},
+      stamp = #{stamp},
+      remark = #{remark}
+      where id = #{id}
+    </update>
+
+  <update id="update" parameterType="com.yx.model.Bill">
+    UPDATE bill SET
+    payable = #{payable},
+    stamp = #{stamp},
+    remark = #{remark}
+    where id = #{id}
+  </update>
+  
+  <delete id="deleteById" parameterType="int">
+    DELETE FROM bill
+    where id = #{value}
+  </delete>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.HouseAgreementMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.HouseAgreement">
+    <result column="stamp" jdbcType="TIMESTAMP" property="stamp" />
+    <result column="agreement" jdbcType="INTEGER" property="agreement" />
+    <result column="house" jdbcType="INTEGER" property="house" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yx.model.HouseAgreement">
+    insert into houseAgreement (stamp, agreement, house)
+    values (#{stamp,jdbcType=TIMESTAMP}, #{agreement,jdbcType=INTEGER}, #{house,jdbcType=INTEGER})
+  </insert>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select stamp, agreement, house, id
+    from houseAgreement
+  </select>
+  <delete id="delete" parameterType="com.yx.model.HouseAgreement">
+    delete from houseAgreement
+    WHERE agreement = #{agreement} and house = #{house}
+  </delete>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.AuthorityMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Authority">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="moudle" jdbcType="NVARCHAR" property="moudle" />
+    <result column="fun_icon" jdbcType="NVARCHAR" property="funIcon" />
+    <result column="url" jdbcType="NVARCHAR" property="url" />
+    <result column="mou_icon" jdbcType="NVARCHAR" property="mouIcon" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from authority
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yx.model.Authority">
+    insert into authority (id, name, moudle, 
+      fun_icon, url, mou_icon
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=NVARCHAR}, #{moudle,jdbcType=NVARCHAR}, 
+      #{funIcon,jdbcType=NVARCHAR}, #{url,jdbcType=NVARCHAR}, #{mouIcon,jdbcType=NVARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yx.model.Authority">
+    update authority
+    set name = #{name,jdbcType=NVARCHAR},
+      moudle = #{moudle,jdbcType=NVARCHAR},
+      fun_icon = #{funIcon,jdbcType=NVARCHAR},
+      url = #{url,jdbcType=NVARCHAR},
+      mou_icon = #{mouIcon,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, name, moudle, fun_icon, url, mou_icon
+    from authority
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, name
+    from authority
+  </select>
+  <select id="selectByRole" parameterType="com.yx.model.Role" resultMap="BaseResultMap">
+    SELECT * from authority
+    <if test='authority != "0"'>
+      where id in (${authority})
+    </if>
+  </select>
+</mapper>

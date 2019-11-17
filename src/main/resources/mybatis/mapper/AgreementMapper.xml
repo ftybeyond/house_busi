@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yx.dao.AgreementMapper">
+  <resultMap id="BaseResultMap" type="com.yx.model.Agreement">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="NVARCHAR" property="title" />
+    <result column="content" jdbcType="NVARCHAR" property="content" />
+    <result column="rent" jdbcType="DOUBLE" property="rent" />
+    <result column="sign_date" jdbcType="TIMESTAMP" property="signDate" />
+    <result column="effect_date" jdbcType="TIMESTAMP" property="effectDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="contacts1" jdbcType="NVARCHAR" property="contacts1" />
+    <result column="contacts2" jdbcType="NVARCHAR" property="contacts2" />
+    <result column="contacts1_tel" jdbcType="NVARCHAR" property="contacts1Tel" />
+    <result column="contacts2_tel" jdbcType="NVARCHAR" property="contacts2Tel" />
+    <result column="pay_round" jdbcType="INTEGER" property="payRound" />
+    <result column="serial_number" jdbcType="NVARCHAR" property="serialNumber" />
+    <result column="charge_times" jdbcType="INTEGER" property="chargeTimes" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from agreement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yx.model.Agreement" useGeneratedKeys="true" keyProperty="id">
+    insert into agreement ( title, content,
+      rent, sign_date, effect_date, 
+      end_date, contacts1, contacts2, 
+      contacts1_tel, contacts2_tel, pay_round, 
+      serial_number, state,charge_times)
+    values ( #{title,jdbcType=NVARCHAR}, #{content,jdbcType=NVARCHAR},
+      #{rent,jdbcType=DOUBLE}, #{signDate,jdbcType=TIMESTAMP}, #{effectDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{contacts1,jdbcType=NVARCHAR}, #{contacts2,jdbcType=NVARCHAR}, 
+      #{contacts1Tel,jdbcType=NVARCHAR}, #{contacts2Tel,jdbcType=NVARCHAR}, #{payRound,jdbcType=INTEGER}, 
+      #{serialNumber,jdbcType=NVARCHAR}, #{state,jdbcType=INTEGER},#{chargeTimes,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yx.model.Agreement">
+    update agreement
+    set title = #{title,jdbcType=NVARCHAR},
+      rent = #{rent,jdbcType=DOUBLE},
+      sign_date = #{signDate,jdbcType=TIMESTAMP},
+      effect_date = #{effectDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      contacts1 = #{contacts1,jdbcType=NVARCHAR},
+      contacts2 = #{contacts2,jdbcType=NVARCHAR},
+      contacts1_tel = #{contacts1Tel,jdbcType=NVARCHAR},
+      contacts2_tel = #{contacts2Tel,jdbcType=NVARCHAR},
+      pay_round = #{payRound,jdbcType=INTEGER},
+      serial_number = #{serialNumber,jdbcType=NVARCHAR},
+      charge_times = #{chargeTimes,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateState" parameterType="com.yx.model.Agreement">
+    UPDATE  agreement
+    set state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, title, rent, sign_date, effect_date, end_date, contacts1, contacts2,
+    contacts1_tel, contacts2_tel, pay_round, serial_number, state,charge_times
+    from agreement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, title, rent, sign_date, effect_date, end_date, contacts1, contacts2,
+    contacts1_tel, contacts2_tel, pay_round, serial_number, state
+    from agreement
+  </select>
+
+  <sql id="selectTable">
+    <bind name="serialNumberSearch" value="'%'+params.serialNumberSearch+'%'"></bind>
+    <bind name="titleSearch" value="'%'+params.titleSearch+'%'"></bind>
+    SELECT id, title, rent, sign_date, effect_date, end_date, contacts1, contacts2,
+    contacts1_tel, contacts2_tel, pay_round, serial_number, state,charge_times
+    FROM  agreement a
+    <where>
+      <if test="params!=null and params.serialNumberSearch.length>0">
+        AND serial_number = #{params.serialNumberSearch}
+      </if>
+      <if test="params!=null and params.state.length>0">
+        AND state in(${params.state})
+      </if>
+      <if test="params!=null and params.titleSearch.length>0">
+        <bind name="titleSearch" value="'%'+params.titleSearch +'%'"></bind>
+        AND title LIKE #{titleSearch}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectCountByPage" parameterType="com.yx.common.PageProxy" resultType="int">
+    <bind name="serialNumberSearch" value="'%'+params.serialNumberSearch+'%'"></bind>
+    <bind name="titleSearch" value="'%'+params.titleSearch+'%'"></bind>
+    SELECT count(*)
+    FROM  agreement a
+    <where>
+      <if test="params!=null and params.serialNumberSearch.length>0">
+        AND serial_number = #{params.serialNumberSearch}
+      </if>
+      <if test="params!=null and params.state.length>0">
+        AND state in(${params.state})
+      </if>
+      <if test="params!=null and params.titleSearch.length>0">
+        <bind name="titleSearch" value="'%'+params.titleSearch +'%'"></bind>
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPage" parameterType="com.yx.common.PageProxy" resultMap="BaseResultMap">
+    SELECT
+    TOP ${length} outer_table.*
+    FROM
+    (
+    SELECT
+    row_number () OVER (ORDER BY id) AS rownumber ,inner_table.*
+    FROM
+    (<include refid="selectTable"></include>) AS inner_table
+    ) AS outer_table
+    WHERE
+    rownumber > #{start}
+  </select>
+
+  <select id="selectContentById" parameterType="int" resultType="java.lang.String">
+    SELECT content FROM agreement a
+    where a.id = #{value}
+  </select>
+</mapper>
