@@ -149,13 +149,6 @@
                 <env>busi</env>
             </properties>
         </profile>
-        <profile>
-            <id>self</id>
-            <properties>
-                <!--和文件名对应-->
-                <env>self</env>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
